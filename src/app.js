@@ -2,6 +2,7 @@ const fs = require('fs')
 
 const express = require('express')
 const app = express()
+const Customer = require('./models/customer')
 
 // Read all consts from .env file depending upon NODE_ENV
 // Usage:
@@ -48,19 +49,32 @@ const customers = [
 	}
 ];
 
+
 // Set up routes
 app.get('/', (req, res) => {
-    res.send({"name": jsonData.name, "colors": jsonData2["favoriteColors"]})
+    res.send("Welcome")
 })
 
-app.get('/api/customers', (req, res) => {
-    res.send({"customers": customers})
+
+// ------------------ CRUD OPS ------------------
+// Pretty much all DB Ops are donw with async-await. 
+// ----------------------------------------------
+
+app.get('/api/customers', async (req, res) => {
+    const result = await Customer.find()    // Find all customers
+    res.json({ "customers": result })       // using res.json instead of res.send. Needn't stringify
 })
 
-app.post('/api/customers', (req, res) => {
-    console.log("Received: " + JSON.stringify(req.body) )
-    customers.push(req.body)
-    res.send({"customers": customers})
+app.post('/api/customers', async (req, res) => {
+    try{
+        let customer = new Customer(req.body)   // Create the customer object
+        await customer.save()                   // Save to DB. Wait for op to complete
+        res.status(201).json({
+            customer, 
+            "Info": "Resource Created"})        // "Created (201)"
+    } catch(e) {
+        res.status(400).json({error:e.message}) // "Bad Request (400)"
+    }
 })
 
 
