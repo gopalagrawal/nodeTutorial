@@ -1,10 +1,23 @@
+const fs = require('fs')
+
 const express = require('express')
 const app = express()
-const PORT = 3000
+
+// Read all consts from .env file depending upon NODE_ENV
+// Usage:
+//      $ set NODE_ENV=production  //To unset: set NODE_ENV=
+//      $ npm run start
+const envFileName = `.env.${process.env.NODE_ENV || "development"}`
+console.log("Using Environ File: " + envFileName)
+require('dotenv').config({ path: envFileName })
 
 // middleware to parse POST request body
 app.use(express.json());
 app.use(express.urlencoded( {extended:true} ));
+
+// Connect to online mongo DB
+const mongoose = require("mongoose")
+mongoose.set('strictQuery', false)
 
 // "Quoted" keys with possibly spaces in there
 const jsonData = {
@@ -52,6 +65,21 @@ app.post('/api/customers', (req, res) => {
 
 
 // =====================================================
-app.listen(PORT, ()=>{
-    console.log("Listening on port " + PORT + " ...")
-})
+// Launch application. Start DB connect first, then app.Listen. 
+
+const start = async () => {
+    try {
+        const DB_URI = process.env.DB_URI || "Missing Connect String"
+        await mongoose.connect(DB_URI)
+
+        const PORT = process.env.PORT || 3000  // default: dev port
+        app.listen(PORT, () => {
+            console.log("Listening on port " + PORT + " ...")
+        })
+    }
+    catch (err) {
+        console.log("Something bad happened ... " + err.message)
+    }
+}
+
+start()
