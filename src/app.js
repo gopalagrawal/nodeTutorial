@@ -8,7 +8,7 @@ app.get('/', (req, res) => {
 })
 
 app.post('/', (req, res) => {
-    res.send('Got a POST request to add some data')
+    res.send('Got a POST request')
 })
 
 
