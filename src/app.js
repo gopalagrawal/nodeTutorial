@@ -60,10 +60,41 @@ app.get('/', (req, res) => {
 // Pretty much all DB Ops are donw with async-await. 
 // ----------------------------------------------
 
+// Query Params (Optional)
 app.get('/api/customers', async (req, res) => {
-    const result = await Customer.find()    // Find all customers
-    res.json({ "customers": result })       // using res.json instead of res.send. Needn't stringify
+    var params = req.query
+
+    let result = {}
+    if (params.id)
+        result = await Customer.findById(params.id)
+    else 
+        result = await Customer.find()    // Find all customers
+
+    res.json({ queryParams: params, "customers": result })       // using res.json instead of res.send. Needn't stringify
 })
+
+// Parameterized URL
+app.get('/api/customers/:id', async (req, res) => {
+    try {
+        const {id} = req.params // Destructuring syntax. 'id' grabbed from req.params and matched to {id}
+        const result = await Customer.findById(id)
+
+        if (!result) {
+            res.status(404).json({error:'No Record Found'})
+        }
+        else {
+            res.json({ 
+                requestParams: req.params, 
+                queryParams: req.query,
+                customers: result 
+            })
+        } 
+    } catch(e) {
+        res.status(500).json({error: e.message})
+    }
+
+})
+
 
 app.post('/api/customers', async (req, res) => {
     try{
