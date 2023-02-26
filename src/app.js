@@ -108,7 +108,26 @@ app.post('/api/customers', async (req, res) => {
     }
 })
 
+app.put('/api/customers/:id', async (req, res)=>{
+    try {
+        const {id} = req.params
+        // The main update function below using "repaceOne". 
+        const result = await Customer.replaceOne({_id:id}, req.body)
 
+        if (!result) {
+            res.status(404).json({error:'No Record Found'})
+        }
+        else {
+            res.json({ 
+                requestParams: req.params, 
+                queryParams: req.query,
+                result: result 
+            })
+        } 
+    } catch(e) {
+        res.status(500).json({error: e.message})
+    }
+})
 // =====================================================
 // Launch application. Start DB connect first, then app.Listen. 
 
