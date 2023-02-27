@@ -20,34 +20,6 @@ app.use(express.urlencoded( {extended:true} ));
 const mongoose = require("mongoose")
 mongoose.set('strictQuery', false)
 
-// "Quoted" keys with possibly spaces in there
-const jsonData = {
-    "name": "Gopal",
-    "industry": "Looking",
-    "favorite Colors": ["blue", "maroon", "purpule", "red", "lime"]
-}
-
-//Keys don't need "quotes" if no spaces. 
-const jsonData2 = {
-    name: "Gopal",
-    industry: "Looking",
-    favoriteColors: ["blue", "maroon", "purpule", "red", "lime"]
-}
-
-const customers = [
-	{
-		"name": "Caleb",
-		"industry": "music"	
-	},
-	{
-		"name": "John",
-		"industry": "networking"	
-	},
-	{
-		"name": "Sal",
-		"industry": "sports medicine"	
-	}
-];
 
 
 // Set up routes
@@ -128,6 +100,29 @@ app.put('/api/customers/:id', async (req, res)=>{
         res.status(500).json({error: e.message})
     }
 })
+
+app.delete('/api/customers/:id', async (req, res) => {
+    try {
+        const {id} = req.params
+        const result = await Customer.deleteOne({_id:id})
+        if (result.deletedCount == 0) {
+            res.status(404).json({error:'No Record Found To Delete'})
+        }
+        else {
+            res.json({ 
+                requestParams: req.params, 
+                queryParams: req.query,
+                result: result 
+            })
+        } 
+    } catch(e) {
+        res.status(500).json({error: e.message})
+    }
+})
+
+
+
+
 // =====================================================
 // Launch application. Start DB connect first, then app.Listen. 
 
