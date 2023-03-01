@@ -8,11 +8,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = require('express');
 const app = express();
 // const Customer = require('./models/customer')
-const customer_1 = require("./models/customer");
+const customer_1 = __importDefault(require("./models/customer"));
 const cors = require('cors');
 // Read all consts from .env file depending upon NODE_ENV
 // Usage:
@@ -42,11 +45,11 @@ app.get('/api/customers', (req, res) => __awaiter(void 0, void 0, void 0, functi
     var params = req.query;
     try {
         if (params.id) {
-            const cust = yield customer_1.Customer.findById(params.id); // Find One Customer
+            const cust = yield customer_1.default.findById(params.id); // Find One Customer
             res.json({ queryParams: params, "customer": cust });
         }
         else {
-            const custList = yield customer_1.Customer.find(); // Find All customers
+            const custList = yield customer_1.default.find(); // Find All customers
             res.json({ queryParams: params, "customers": custList });
         }
     }
@@ -58,7 +61,7 @@ app.get('/api/customers', (req, res) => __awaiter(void 0, void 0, void 0, functi
 app.get('/api/customers/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params; // Destructuring syntax. 'id' grabbed from req.params and matched to {id}
-        const result = yield customer_1.Customer.findById(id);
+        const result = yield customer_1.default.findById(id);
         if (!result) {
             res.status(404).json({ error: 'No Record Found' });
         }
@@ -76,7 +79,7 @@ app.get('/api/customers/:id', (req, res) => __awaiter(void 0, void 0, void 0, fu
 }));
 app.post('/api/customers', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        let customer = new customer_1.Customer(req.body); // Create the customer object
+        let customer = new customer_1.default(req.body); // Create the customer object
         yield customer.save(); // Save to DB. Wait for op to complete
         res.status(201).json({
             customer,
@@ -91,7 +94,7 @@ app.put('/api/customers/:id', (req, res) => __awaiter(void 0, void 0, void 0, fu
     try {
         const { id } = req.params;
         // The main update function below using "repaceOne". 
-        const result = yield customer_1.Customer.replaceOne({ _id: id }, req.body);
+        const result = yield customer_1.default.replaceOne({ _id: id }, req.body);
         if (!result) {
             res.status(404).json({ error: 'No Record Found' });
         }
@@ -110,7 +113,7 @@ app.put('/api/customers/:id', (req, res) => __awaiter(void 0, void 0, void 0, fu
 app.delete('/api/customers/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const result = yield customer_1.Customer.deleteOne({ _id: id });
+        const result = yield customer_1.default.deleteOne({ _id: id });
         if (result.deletedCount == 0) {
             res.status(404).json({ error: 'No Record Found To Delete' });
         }

@@ -1,7 +1,19 @@
-import {Schema, model} from 'mongoose'      // TS Style
-// const mongoose = require('mongoose')     // JS Style
+import {Schema, model, HydratedDocument} from 'mongoose'
 
-const customerSchema = new Schema( {
+interface IOrder {
+    description: string,
+    amountInCents?: number
+}
+
+interface ICustomer {
+    name: string,
+    industry?: string,
+    orders?: IOrder[]
+}
+
+// Define the customerSchema based on above Interface.
+// Allows more TypeScript static checking. 
+const customerSchema = new Schema<ICustomer>({
     name: {type:String, required:true},
     industry: String,
     orders: [
@@ -12,6 +24,12 @@ const customerSchema = new Schema( {
     ]
 })
 
-// Map collection name to the schema above. And also export this model. 
-// module.exports = mongoose.model('Customer', customerSchema)  // JS style
-export const Customer = model('customer', customerSchema)       // TS style
+
+const Customer = model('customer', customerSchema)
+
+// const c: HydratedDocument<ICustomer> = new Customer ({
+//     name: 'test', industry: 'test'
+// })
+// console.log(c.nam()) //will give errors since ICustomer should have 'name' and not 'nam' 
+
+export default Customer

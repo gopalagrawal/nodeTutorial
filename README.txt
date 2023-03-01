@@ -46,6 +46,17 @@ Let's undo the changes in tsconfig.json.
  - IMPORT TYPES:  import {Request, Response} from 'express'
  - USE TYPES: Change all (req, res) --> (req:Request, res:Response)
 
+===================================================================
+TypeScript Interfaces for Mongoose
+===================================================================
+In customer.ts,  we can define our CustomerSchema in terms of typescript interfaces.
+- Allows better static checking in Typescript compilation. 
+
+
+
+
+
+
 
 
 

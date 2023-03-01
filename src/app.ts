@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 // const Customer = require('./models/customer')
-import {Customer} from './models/customer'
+import Customer from './models/customer'
 const cors = require('cors')
 
 // Get the necessary types for typescript
