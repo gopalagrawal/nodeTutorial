@@ -1,9 +1,7 @@
-// @ts-nocheck
-
-
 const express = require('express')
 const app = express()
-const Customer = require('./models/customer')
+// const Customer = require('./models/customer')
+import {Customer} from './models/customer'
 const cors = require('cors')
 
 // Read all consts from .env file depending upon NODE_ENV
@@ -41,14 +39,18 @@ app.get('/', (req, res) => {
 // Query Params (Optional)
 app.get('/api/customers', async (req, res) => {
     var params = req.query
-
-    let result = {}
-    if (params.id)
-        result = await Customer.findById(params.id)
-    else 
-        result = await Customer.find()    // Find all customers
-
-    res.json({ queryParams: params, "customers": result })       // using res.json instead of res.send. Needn't stringify
+    try{
+        if (params.id){
+            const cust = await Customer.findById(params.id)   // Find One Customer
+            res.json({ queryParams: params, "customer": cust })
+        }
+        else{
+            const custList = await Customer.find()    // Find All customers
+            res.json({ queryParams: params, "customers": custList })
+        }
+    } catch (e) {
+        res.status(404).json({error:e.message})
+    }
 })
 
 // Parameterized URL

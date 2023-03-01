@@ -22,4 +22,13 @@ To run the project::
 - This will run the 'npx nodemon src/app.js' just as before. 
 - Make sure current IP address is allowed to access online mongodb. 
 
+===================================================================
+1 - Use TypeScript Imports and exports
+2 - Getting rid of transpile errors
+===================================================================
 
+If we remove the @ts-nocheck, we get errors about 'cannot redeclare block-scoped vars" ... Need to fix this. 
+
+- Instead of 'require(...)',  use 'import' stmts. 
+- in tsconfig.json 'Type Checking', uncomment and change  "noImplicityAny": true --> false. 
+- Also, uncomment & change:  // "useUnknownInCatchVariables": true --> false
