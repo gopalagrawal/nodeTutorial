@@ -32,3 +32,27 @@ If we remove the @ts-nocheck, we get errors about 'cannot redeclare block-scoped
 - Instead of 'require(...)',  use 'import' stmts. 
 - in tsconfig.json 'Type Checking', uncomment and change  "noImplicityAny": true --> false. 
 - Also, uncomment & change:  // "useUnknownInCatchVariables": true --> false
+
+
+===================================================================
+Typed Parameters in TypeScript
+===================================================================
+
+Let's undo the changes in tsconfig.json. 
+ - revert (comment out) noImplicitAny and useUnknownInCatchVariables
+ - A lot of type errors for req & res will pop up. 
+   So we need to 'type' these express vars to equivalent ts types. 
+ - INSTALL:  npm install @types/express
+ - IMPORT TYPES:  import {Request, Response} from 'express'
+ - USE TYPES: Change all (req, res) --> (req:Request, res:Response)
+
+
+
+
+
+
+
+
+
+
+

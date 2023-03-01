@@ -4,6 +4,10 @@ const app = express()
 import {Customer} from './models/customer'
 const cors = require('cors')
 
+// Get the necessary types for typescript
+import { Request, Response } from 'express'
+
+
 // Read all consts from .env file depending upon NODE_ENV
 // Usage:
 //      $ set NODE_ENV=production  //To unset: set NODE_ENV=
@@ -27,7 +31,7 @@ mongoose.set('strictQuery', false)
 
 
 // Set up routes
-app.get('/', (req, res) => {
+app.get('/', (req: Request, res: Response) => {
     res.send("Welcome")
 })
 
@@ -37,7 +41,7 @@ app.get('/', (req, res) => {
 // ----------------------------------------------
 
 // Query Params (Optional)
-app.get('/api/customers', async (req, res) => {
+app.get('/api/customers', async (req: Request, res: Response) => {
     var params = req.query
     try{
         if (params.id){
@@ -54,7 +58,7 @@ app.get('/api/customers', async (req, res) => {
 })
 
 // Parameterized URL
-app.get('/api/customers/:id', async (req, res) => {
+app.get('/api/customers/:id', async (req: Request, res: Response) => {
     try {
         const {id} = req.params // Destructuring syntax. 'id' grabbed from req.params and matched to {id}
         const result = await Customer.findById(id)
@@ -76,7 +80,7 @@ app.get('/api/customers/:id', async (req, res) => {
 })
 
 
-app.post('/api/customers', async (req, res) => {
+app.post('/api/customers', async (req: Request, res: Response) => {
     try{
         let customer = new Customer(req.body)   // Create the customer object
         await customer.save()                   // Save to DB. Wait for op to complete
@@ -88,7 +92,7 @@ app.post('/api/customers', async (req, res) => {
     }
 })
 
-app.put('/api/customers/:id', async (req, res)=>{
+app.put('/api/customers/:id', async (req: Request, res: Response)=>{
     try {
         const {id} = req.params
         // The main update function below using "repaceOne". 
@@ -109,7 +113,7 @@ app.put('/api/customers/:id', async (req, res)=>{
     }
 })
 
-app.delete('/api/customers/:id', async (req, res) => {
+app.delete('/api/customers/:id', async (req: Request, res: Response) => {
     try {
         const {id} = req.params
         const result = await Customer.deleteOne({_id:id})
