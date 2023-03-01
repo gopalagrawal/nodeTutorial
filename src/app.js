@@ -3,6 +3,7 @@ const fs = require('fs')
 const express = require('express')
 const app = express()
 const Customer = require('./models/customer')
+const cors = require('cors')
 
 // Read all consts from .env file depending upon NODE_ENV
 // Usage:
@@ -11,6 +12,10 @@ const Customer = require('./models/customer')
 const envFileName = `.env.${process.env.NODE_ENV || "development"}`
 console.log("Using Environ File: " + envFileName)
 require('dotenv').config({ path: envFileName })
+
+// Enable CORS requests. A F.End app (running on a different dev server ... say 3000), 
+// can now access this server running on 3005. Do this only for development. 
+app.use(cors())
 
 // middleware to parse POST request body
 app.use(express.json());
